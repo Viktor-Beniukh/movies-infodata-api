@@ -19,7 +19,9 @@ class Actor(models.Model):
     name = models.CharField(max_length=255)
     age = models.PositiveSmallIntegerField(default=0)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to="actors/", blank=True, null=True)
+    image = models.ImageField(
+        upload_to="actors/", blank=True, null=True, default="default.jpg"
+    )
 
     class Meta:
         ordering = ("name",)
@@ -32,7 +34,9 @@ class Director(models.Model):
     name = models.CharField(max_length=255)
     age = models.PositiveSmallIntegerField(default=0)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to="directors/", blank=True, null=True)
+    image = models.ImageField(
+        upload_to="directors/", blank=True, null=True, default="default.jpg"
+    )
 
     class Meta:
         ordering = ("name",)
@@ -56,7 +60,9 @@ class Movie(models.Model):
     title = models.CharField(max_length=255)
     tagline = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
-    poster = models.ImageField(upload_to="movies/", blank=True, null=True)
+    poster = models.ImageField(
+        upload_to="movies/", blank=True, null=True, default="no-image.jpg"
+    )
     year_of_release = models.PositiveSmallIntegerField(default=2019)
     country = models.CharField(max_length=255, blank=True)
     directors = models.ManyToManyField(Director, related_name="film_director")
@@ -87,13 +93,15 @@ class Movie(models.Model):
         return self.title
 
     def get_review(self):
-        return self.film_review.filter(parent__isnull=True)
+        return self.reviews.filter(parent__isnull=True)
 
 
 class MovieFrames(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to="movie_shots/", blank=True, null=True)
+    image = models.ImageField(
+        upload_to="movie_shots/", blank=True, null=True, default="no-image.jpg"
+    )
     movies = models.ForeignKey(
         Movie, on_delete=models.CASCADE, related_name="film_shots"
     )
@@ -149,7 +157,7 @@ class Review(models.Model):
         verbose_name="Parent"
     )
     movie = models.ForeignKey(
-        Movie, on_delete=models.CASCADE, related_name="film_review"
+        Movie, on_delete=models.CASCADE, related_name="reviews"
     )
 
     def __str__(self):

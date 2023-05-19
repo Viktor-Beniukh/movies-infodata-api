@@ -35,7 +35,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Actor)
 class ActorAdmin(admin.ModelAdmin):
-    list_display = ("name", "age", "get_image")
+    list_display = ("name", "age")
     search_fields = ("name",)
     readonly_fields = ("get_image", )
 
