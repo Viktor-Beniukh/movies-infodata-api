@@ -176,7 +176,7 @@ class MovieFramesAdmin(admin.ModelAdmin):
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ("movie", "star")
+    list_display = ("movie", "star", "user")
 
 
 admin.site.register(RatingStar)

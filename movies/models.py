@@ -116,7 +116,7 @@ class MovieFrames(models.Model):
 
 
 class RatingStar(models.Model):
-    value = models.IntegerField(default=0)
+    value = models.IntegerField()
 
     class Meta:
         ordering = ("-value",)
