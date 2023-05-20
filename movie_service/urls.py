@@ -22,6 +22,8 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("ckeditor/", include("ckeditor_uploader.urls")),
+    path("api/", include("movies.urls", namespace="api")),
+    path("__debug__/", include("debug_toolbar.urls"))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
@@ -29,4 +31,3 @@ if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
     )
-
