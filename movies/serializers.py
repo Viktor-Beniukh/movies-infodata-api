@@ -1,9 +1,8 @@
 from rest_framework import serializers
 
 from movies.models import (
-    Movie, Review, Rating, RatingStar, Actor, Director
+    Movie, Review, Rating, RatingStar, Actor, Director, Category, Genre, MovieFrames
 )
-from user.serializers import UserSerializer
 
 
 class ActorListSerializer(serializers.ModelSerializer):
@@ -86,6 +85,27 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = "__all__"
+
+
+class CategoryCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ("name",)
+
+
+class GenreCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Genre
+        fields = ("name",)
+
+
+class MovieFramesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MovieFrames
+        fields = ("title", "image", "movies")
 
 
 class MovieListSerializer(serializers.ModelSerializer):

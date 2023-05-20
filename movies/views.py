@@ -1,6 +1,6 @@
 from rest_framework import viewsets, mixins
 
-from movies.models import Movie, Actor, Director
+from movies.models import Movie, Actor, Director, Category, Genre, MovieFrames
 from movies.serializers import (
     MovieListSerializer,
     MovieDetailSerializer,
@@ -10,6 +10,9 @@ from movies.serializers import (
     ActorDetailSerializer,
     DirectorListSerializer,
     DirectorDetailSerializer,
+    CategoryCreateSerializer,
+    GenreCreateSerializer,
+    MovieFramesSerializer,
 )
 
 
@@ -74,3 +77,24 @@ class DirectorViewSet(
         if self.action == "retrieve":
             return DirectorDetailSerializer
         return super().get_serializer_class()
+
+
+class CategoryViewSet(
+    mixins.CreateModelMixin, viewsets.GenericViewSet
+):
+    queryset = Category.objects.all()
+    serializer_class = CategoryCreateSerializer
+
+
+class GenreViewSet(
+    mixins.CreateModelMixin, viewsets.GenericViewSet
+):
+    queryset = Genre.objects.all()
+    serializer_class = GenreCreateSerializer
+
+
+class MovieFramesViewSet(
+    mixins.CreateModelMixin, viewsets.GenericViewSet
+):
+    queryset = MovieFrames.objects.all()
+    serializer_class = MovieFramesSerializer
