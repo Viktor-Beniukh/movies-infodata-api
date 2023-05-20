@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import viewsets, mixins
 
 from movies.models import Movie, Actor, Director
 from movies.serializers import (
@@ -13,48 +13,64 @@ from movies.serializers import (
 )
 
 
-class MovieListView(generics.ListAPIView):
+class MovieViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
     serializer_class = MovieListSerializer
 
     def get_queryset(self):
         queryset = Movie.objects.filter(draft=False)
         return queryset
 
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return MovieDetailSerializer
+        return super().get_serializer_class()
 
-class MovieDetailView(generics.RetrieveAPIView):
-    queryset = Movie.objects.filter(draft=False)
-    serializer_class = MovieDetailSerializer
 
-
-class ReviewCreateView(generics.CreateAPIView):
+class ReviewViewSet(
+    mixins.CreateModelMixin, viewsets.GenericViewSet
+):
     serializer_class = ReviewCreateSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-class AddStarRatingView(generics.CreateAPIView):
+class AddStarRatingViewSet(
+    mixins.CreateModelMixin, viewsets.GenericViewSet
+):
     serializer_class = RatingCreateSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-class ActorsListView(generics.ListAPIView):
+class ActorViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = Actor.objects.all()
     serializer_class = ActorListSerializer
 
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return ActorDetailSerializer
+        return super().get_serializer_class()
 
-class ActorDetailView(generics.RetrieveAPIView):
-    queryset = Actor.objects.all()
-    serializer_class = ActorDetailSerializer
 
-
-class DirectorsListView(generics.ListAPIView):
+class DirectorViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = Director.objects.all()
     serializer_class = DirectorListSerializer
 
-
-class DirectorDetailView(generics.RetrieveAPIView):
-    queryset = Director.objects.all()
-    serializer_class = DirectorDetailSerializer
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return DirectorDetailSerializer
+        return super().get_serializer_class()
