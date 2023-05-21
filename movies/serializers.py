@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 
 from movies.models import (
@@ -12,7 +11,6 @@ from movies.models import (
     Genre,
     MovieFrames,
 )
-from user.models import User
 
 
 class ActorSerializer(serializers.ModelSerializer):
@@ -93,6 +91,7 @@ class RatingCreateSerializer(serializers.ModelSerializer):
 
 class FilterReviewListSerializer(serializers.ListSerializer):
     """Comment filter, only parents"""
+
     def to_representation(self, data):
         data = data.filter(parent=None)
         return super(FilterReviewListSerializer, self).to_representation(data)
@@ -100,6 +99,7 @@ class FilterReviewListSerializer(serializers.ListSerializer):
 
 class RecursiveSerializer(serializers.Serializer):
     """Recursive children output"""
+
     def to_representation(self, value):
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
@@ -125,7 +125,10 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         data = super(ReviewCreateSerializer, self).validate(attrs=attrs)
         if attrs["parent"]:
-            if attrs["parent"].user.email == self.context["request"].user.email:
+            if (
+                attrs["parent"].user.email
+                == self.context["request"].user.email
+            ):
                 raise serializers.ValidationError(
                     {"message": "You can't comment your reviews"}
                 )
