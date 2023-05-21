@@ -1,6 +1,9 @@
 from rest_framework import viewsets, mixins
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from movies.models import Movie, Actor, Director, Category, Genre, MovieFrames
+
 from movies.serializers import (
     MovieListSerializer,
     MovieDetailSerializer,
@@ -37,6 +40,8 @@ class ReviewViewSet(
     mixins.CreateModelMixin, viewsets.GenericViewSet
 ):
     serializer_class = ReviewCreateSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -46,6 +51,8 @@ class AddStarRatingViewSet(
     mixins.CreateModelMixin, viewsets.GenericViewSet
 ):
     serializer_class = RatingCreateSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -84,6 +91,8 @@ class CategoryViewSet(
 ):
     queryset = Category.objects.all()
     serializer_class = CategoryCreateSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAdminUser,)
 
 
 class GenreViewSet(
@@ -91,6 +100,8 @@ class GenreViewSet(
 ):
     queryset = Genre.objects.all()
     serializer_class = GenreCreateSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAdminUser,)
 
 
 class MovieFramesViewSet(
@@ -98,3 +109,5 @@ class MovieFramesViewSet(
 ):
     queryset = MovieFrames.objects.all()
     serializer_class = MovieFramesSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAdminUser,)
