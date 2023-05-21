@@ -1,7 +1,15 @@
 from rest_framework import serializers
 
 from movies.models import (
-    Movie, Review, Rating, RatingStar, Actor, Director, Category, Genre, MovieFrames
+    Movie,
+    Review,
+    Rating,
+    RatingStar,
+    Actor,
+    Director,
+    Category,
+    Genre,
+    MovieFrames,
 )
 
 

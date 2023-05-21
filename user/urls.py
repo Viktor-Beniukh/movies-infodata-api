@@ -15,4 +15,3 @@ urlpatterns = [
     path("token/", CreateTokenView.as_view(), name="token"),
     path("me/", ManageUserView.as_view(), name="manage"),
 ]
-
