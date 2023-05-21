@@ -89,14 +89,30 @@ class RatingCreateSerializer(serializers.ModelSerializer):
         return rating
 
 
+class FilterReviewListSerializer(serializers.ListSerializer):
+    """Comment filter, only parents"""
+    def to_representation(self, data):
+        data = data.filter(parent=None)
+        return super(FilterReviewListSerializer, self).to_representation(data)
+
+
+class RecursiveSerializer(serializers.Serializer):
+    """Recursive children output"""
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         slug_field="first_name", read_only=True
     )
+    children = RecursiveSerializer(many=True)
 
     class Meta:
+        list_serializer_class = FilterReviewListSerializer
         model = Review
-        fields = ("user", "text", "parent")
+        fields = ("user", "text", "children")
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
