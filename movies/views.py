@@ -1,4 +1,5 @@
 from django.db.models import Avg
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -79,12 +80,35 @@ class ActorViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
 
+    def get_queryset(self):
+        name = self.request.query_params.get("name")
+        queryset = super().get_queryset()
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+
+        return queryset
+
     def get_serializer_class(self):
         if self.action == "list":
             return ActorListSerializer
         if self.action == "retrieve":
             return ActorDetailSerializer
         return super().get_serializer_class()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                type=str,
+                description=(
+                    "Filter by name (ex. ?name=Tom Cruise)"
+                )
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class DirectorViewSet(viewsets.ModelViewSet):
@@ -94,12 +118,35 @@ class DirectorViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
 
+    def get_queryset(self):
+        name = self.request.query_params.get("name")
+        queryset = super().get_queryset()
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+
+        return queryset
+
     def get_serializer_class(self):
         if self.action == "list":
             return DirectorListSerializer
         if self.action == "retrieve":
             return DirectorDetailSerializer
         return super().get_serializer_class()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                type=str,
+                description=(
+                    "Filter by name (ex. ?name=James Cameron)"
+                )
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class CategoryViewSet(
