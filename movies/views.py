@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
 
 from movies.models import Movie, Actor, Director, Category, Genre, MovieFrames
+from movies.pagination import ApiPagination
 from movies.permissions import IsAdminOrReadOnly
 
 from movies.serializers import (
@@ -31,6 +32,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = MovieFilter
+    pagination_class = ApiPagination
 
     def get_queryset(self):
         queryset = Movie.objects.filter(draft=False)
