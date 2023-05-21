@@ -1,3 +1,4 @@
+
 from rest_framework import serializers
 
 from movies.models import (
@@ -11,6 +12,7 @@ from movies.models import (
     Genre,
     MovieFrames,
 )
+from user.models import User
 
 
 class ActorSerializer(serializers.ModelSerializer):
@@ -119,6 +121,15 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         slug_field="first_name", read_only=True
     )
+
+    def validate(self, attrs):
+        data = super(ReviewCreateSerializer, self).validate(attrs=attrs)
+        if attrs["parent"]:
+            if attrs["parent"].user.email == self.context["request"].user.email:
+                raise serializers.ValidationError(
+                    {"message": "You can't comment your reviews"}
+                )
+        return data
 
     class Meta:
         model = Review
