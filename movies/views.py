@@ -1,6 +1,7 @@
 from rest_framework import viewsets, mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
 
 from movies.models import Movie, Actor, Director, Category, Genre, MovieFrames
 from movies.permissions import IsAdminOrReadOnly
@@ -13,12 +14,14 @@ from movies.serializers import (
     ActorSerializer,
     ActorListSerializer,
     ActorDetailSerializer,
+    DirectorSerializer,
     DirectorListSerializer,
     DirectorDetailSerializer,
     CategoryCreateSerializer,
     GenreCreateSerializer,
-    MovieFramesSerializer, DirectorSerializer,
+    MovieFramesSerializer,
 )
+from movies.service import MovieFilter
 
 
 class MovieViewSet(
@@ -27,6 +30,8 @@ class MovieViewSet(
     viewsets.GenericViewSet
 ):
     serializer_class = MovieListSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = MovieFilter
 
     def get_queryset(self):
         queryset = Movie.objects.filter(draft=False)
