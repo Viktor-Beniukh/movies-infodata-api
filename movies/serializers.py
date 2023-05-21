@@ -197,8 +197,8 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     directors = DirectorListSerializer(read_only=True, many=True)
     actors = ActorListSerializer(read_only=True, many=True)
     film_rating = RatingSerializer(many=True)
-    average_rating = serializers.FloatField(
-        max_value=5.0, min_value=0.0, read_only=True
+    average_rating = serializers.DecimalField(
+        max_digits=3, decimal_places=1, read_only=True, coerce_to_string=False
     )
     reviews = ReviewSerializer(many=True)
 
