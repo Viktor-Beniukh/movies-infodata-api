@@ -1,3 +1,4 @@
+from django.db.models import Avg
 from rest_framework import viewsets, mixins
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -35,7 +36,10 @@ class MovieViewSet(viewsets.ModelViewSet):
     pagination_class = ApiPagination
 
     def get_queryset(self):
-        queryset = Movie.objects.filter(draft=False)
+        queryset = (
+            Movie.objects.filter(draft=False)
+            .annotate(average_rating=Avg("film_rating__star__value"))
+        )
         return queryset
 
     def get_serializer_class(self):

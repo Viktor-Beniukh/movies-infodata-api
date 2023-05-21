@@ -1,3 +1,4 @@
+from django.db.models import Avg
 from rest_framework import serializers
 
 from movies.models import (
@@ -170,10 +171,20 @@ class MovieSerializer(serializers.ModelSerializer):
 
 class MovieListSerializer(serializers.ModelSerializer):
     film_rating = RatingSerializer(many=True)
+    average_rating = serializers.DecimalField(
+        max_digits=3, decimal_places=1, read_only=True, coerce_to_string=False
+    )
 
     class Meta:
         model = Movie
-        fields = ("id", "title", "tagline", "category", "film_rating")
+        fields = (
+            "id",
+            "title",
+            "tagline",
+            "category",
+            "film_rating",
+            "average_rating",
+        )
 
 
 class MovieDetailSerializer(serializers.ModelSerializer):
@@ -186,6 +197,9 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     directors = DirectorListSerializer(read_only=True, many=True)
     actors = ActorListSerializer(read_only=True, many=True)
     film_rating = RatingSerializer(many=True)
+    average_rating = serializers.FloatField(
+        max_value=5.0, min_value=0.0, read_only=True
+    )
     reviews = ReviewSerializer(many=True)
 
     class Meta:
@@ -206,5 +220,6 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             "fees_in_the_usa",
             "fees_in_the_world",
             "film_rating",
+            "average_rating",
             "reviews"
         )
