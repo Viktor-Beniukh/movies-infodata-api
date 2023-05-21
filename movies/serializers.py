@@ -69,8 +69,8 @@ class RatingSerializer(serializers.ModelSerializer):
 
 
 class RatingCreateSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(
-        slug_field="first_name", read_only=True
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
     )
     star = serializers.SlugRelatedField(
         slug_field="value", queryset=RatingStar.objects.all()
@@ -82,6 +82,7 @@ class RatingCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         rating, created = Rating.objects.update_or_create(
+            user=validated_data.get("user", None),
             movie=validated_data.get("movie", None),
             defaults={"star": validated_data.get("star")}
         )
