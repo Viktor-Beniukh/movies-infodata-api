@@ -23,6 +23,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("ckeditor/", include("ckeditor_uploader.urls")),
     path("", include("movies.urls")),
+    path("user/", include("user.urls")),
     path("__debug__/", include("debug_toolbar.urls"))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
