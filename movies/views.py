@@ -3,19 +3,21 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from movies.models import Movie, Actor, Director, Category, Genre, MovieFrames
+from movies.permissions import IsAdminOrReadOnly
 
 from movies.serializers import (
     MovieListSerializer,
     MovieDetailSerializer,
     ReviewCreateSerializer,
     RatingCreateSerializer,
+    ActorSerializer,
     ActorListSerializer,
     ActorDetailSerializer,
     DirectorListSerializer,
     DirectorDetailSerializer,
     CategoryCreateSerializer,
     GenreCreateSerializer,
-    MovieFramesSerializer,
+    MovieFramesSerializer, DirectorSerializer,
 )
 
 
@@ -58,29 +60,29 @@ class AddStarRatingViewSet(
         serializer.save(user=self.request.user)
 
 
-class ActorViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
-):
+class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
-    serializer_class = ActorListSerializer
+    serializer_class = ActorSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAdminOrReadOnly,)
 
     def get_serializer_class(self):
+        if self.action == "list":
+            return ActorListSerializer
         if self.action == "retrieve":
             return ActorDetailSerializer
         return super().get_serializer_class()
 
 
-class DirectorViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
-):
+class DirectorViewSet(viewsets.ModelViewSet):
     queryset = Director.objects.all()
-    serializer_class = DirectorListSerializer
+    serializer_class = DirectorSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAdminOrReadOnly,)
 
     def get_serializer_class(self):
+        if self.action == "list":
+            return DirectorListSerializer
         if self.action == "retrieve":
             return DirectorDetailSerializer
         return super().get_serializer_class()
