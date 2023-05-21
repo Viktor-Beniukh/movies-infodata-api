@@ -146,6 +146,13 @@ class MovieFramesSerializer(serializers.ModelSerializer):
         fields = ("title", "image", "movies")
 
 
+class MovieSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Movie
+        fields = "__all__"
+
+
 class MovieListSerializer(serializers.ModelSerializer):
     film_rating = RatingSerializer(many=True)
 

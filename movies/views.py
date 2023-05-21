@@ -7,6 +7,7 @@ from movies.models import Movie, Actor, Director, Category, Genre, MovieFrames
 from movies.permissions import IsAdminOrReadOnly
 
 from movies.serializers import (
+    MovieSerializer,
     MovieListSerializer,
     MovieDetailSerializer,
     ReviewCreateSerializer,
@@ -24,12 +25,10 @@ from movies.serializers import (
 from movies.service import MovieFilter
 
 
-class MovieViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
-):
-    serializer_class = MovieListSerializer
+class MovieViewSet(viewsets.ModelViewSet):
+    serializer_class = MovieSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = MovieFilter
 
@@ -38,6 +37,8 @@ class MovieViewSet(
         return queryset
 
     def get_serializer_class(self):
+        if self.action == "list":
+            return MovieListSerializer
         if self.action == "retrieve":
             return MovieDetailSerializer
         return super().get_serializer_class()
