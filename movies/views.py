@@ -73,6 +73,7 @@ class ActorViewSet(viewsets.ModelViewSet):
     serializer_class = ActorSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (DjangoFilterBackend,)
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -87,6 +88,7 @@ class DirectorViewSet(viewsets.ModelViewSet):
     serializer_class = DirectorSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (DjangoFilterBackend,)
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -117,7 +119,7 @@ class GenreViewSet(
 class MovieFramesViewSet(
     mixins.CreateModelMixin, viewsets.GenericViewSet
 ):
-    queryset = MovieFrames.objects.all()
+    queryset = MovieFrames.objects.select_related("movies")
     serializer_class = MovieFramesSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminUser,)
