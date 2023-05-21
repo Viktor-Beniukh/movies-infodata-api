@@ -1,3 +1,5 @@
+from abc import ABC
+
 from rest_framework import serializers
 
 from movies.models import (
@@ -17,7 +19,7 @@ class ActorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Actor
-        fields = "__all__"
+        fields = ("id", "name", "age", "description", "image")
 
 
 class ActorListSerializer(serializers.ModelSerializer):
@@ -200,6 +202,9 @@ class MovieDetailSerializer(serializers.ModelSerializer):
         max_digits=3, decimal_places=1, read_only=True, coerce_to_string=False
     )
     reviews = ReviewSerializer(many=True)
+    budget = serializers.SerializerMethodField()
+    fees_in_the_usa = serializers.SerializerMethodField()
+    fees_in_the_world = serializers.SerializerMethodField()
 
     class Meta:
         model = Movie
@@ -218,7 +223,26 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             "budget",
             "fees_in_the_usa",
             "fees_in_the_world",
+            "description",
             "film_rating",
             "average_rating",
             "reviews"
         )
+
+    @staticmethod
+    def get_budget(obj):
+        budget = obj.budget
+        formatted_budget = f"${budget}"
+        return formatted_budget
+
+    @staticmethod
+    def get_fees_in_the_usa(obj):
+        fees_in_the_usa = obj.fees_in_the_usa
+        formatted_fees_in_the_usa = f"${fees_in_the_usa}"
+        return formatted_fees_in_the_usa
+
+    @staticmethod
+    def get_fees_in_the_world(obj):
+        fees_in_the_world = obj.fees_in_the_world
+        formatted_fees_in_the_world = f"${fees_in_the_world}"
+        return formatted_fees_in_the_world
