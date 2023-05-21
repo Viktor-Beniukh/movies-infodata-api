@@ -114,7 +114,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         list_serializer_class = FilterReviewListSerializer
         model = Review
-        fields = ("user", "text", "children")
+        fields = ("id", "user", "text", "children")
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
