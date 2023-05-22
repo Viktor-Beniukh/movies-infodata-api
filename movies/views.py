@@ -29,6 +29,10 @@ from movies.service import MovieFilter
 
 
 class MovieViewSet(viewsets.ModelViewSet):
+    queryset = (
+        Movie.objects.filter(draft=False)
+        .annotate(average_rating=Avg("film_rating__star__value"))
+    )
     serializer_class = MovieSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
@@ -37,10 +41,16 @@ class MovieViewSet(viewsets.ModelViewSet):
     pagination_class = ApiPagination
 
     def get_queryset(self):
-        queryset = (
-            Movie.objects.filter(draft=False)
-            .annotate(average_rating=Avg("film_rating__star__value"))
-        )
+        title = self.request.query_params.get("title")
+        category = self.request.query_params.get("category")
+        queryset = super().get_queryset()
+
+        if title:
+            queryset = queryset.filter(title__icontains=title)
+
+        if category:
+            queryset = queryset.filter(category__name__icontains=category)
+
         return queryset
 
     def get_serializer_class(self):
@@ -49,6 +59,27 @@ class MovieViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return MovieDetailSerializer
         return super().get_serializer_class()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="title",
+                type=str,
+                description=(
+                        "Filter by title (ex. ?title=Terminator)"
+                )
+            ),
+            OpenApiParameter(
+                name="category",
+                type=str,
+                description=(
+                        "Filter by category name (ex. ?category=Films)"
+                )
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class ReviewViewSet(
@@ -79,6 +110,7 @@ class ActorViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
+    pagination_class = ApiPagination
 
     def get_queryset(self):
         name = self.request.query_params.get("name")
@@ -117,6 +149,7 @@ class DirectorViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
+    pagination_class = ApiPagination
 
     def get_queryset(self):
         name = self.request.query_params.get("name")
