@@ -1,7 +1,7 @@
 from django.db.models import Avg
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+
 from rest_framework import viewsets, mixins
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -34,7 +34,6 @@ class MovieViewSet(viewsets.ModelViewSet):
         .annotate(average_rating=Avg("film_rating__star__value"))
     )
     serializer_class = MovieSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = MovieFilter
@@ -86,7 +85,6 @@ class ReviewViewSet(
     mixins.CreateModelMixin, viewsets.GenericViewSet
 ):
     serializer_class = ReviewCreateSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
@@ -97,7 +95,6 @@ class AddStarRatingViewSet(
     mixins.CreateModelMixin, viewsets.GenericViewSet
 ):
     serializer_class = RatingCreateSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
@@ -107,7 +104,6 @@ class AddStarRatingViewSet(
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     pagination_class = ApiPagination
@@ -146,7 +142,6 @@ class ActorViewSet(viewsets.ModelViewSet):
 class DirectorViewSet(viewsets.ModelViewSet):
     queryset = Director.objects.all()
     serializer_class = DirectorSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     pagination_class = ApiPagination
@@ -187,7 +182,6 @@ class CategoryViewSet(
 ):
     queryset = Category.objects.all()
     serializer_class = CategoryCreateSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminUser,)
 
 
@@ -196,7 +190,6 @@ class GenreViewSet(
 ):
     queryset = Genre.objects.all()
     serializer_class = GenreCreateSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminUser,)
 
 
@@ -205,5 +198,4 @@ class MovieFramesViewSet(
 ):
     queryset = MovieFrames.objects.select_related("movies")
     serializer_class = MovieFramesSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAdminUser,)

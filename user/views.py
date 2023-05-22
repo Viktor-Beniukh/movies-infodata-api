@@ -2,7 +2,6 @@ from django.db import IntegrityError
 from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import generics
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -27,7 +26,6 @@ class CreateTokenView(ObtainAuthToken):
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
@@ -36,7 +34,6 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
 
 class CreateProfileView(generics.CreateAPIView):
     serializer_class = ProfileSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
@@ -48,7 +45,6 @@ class CreateProfileView(generics.CreateAPIView):
 
 class UpdateProfileView(generics.UpdateAPIView):
     serializer_class = ProfileSerializer
-    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     filter_backends = (DjangoFilterBackend,)
 
