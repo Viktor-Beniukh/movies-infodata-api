@@ -66,14 +66,14 @@ class MovieViewSet(viewsets.ModelViewSet):
                 name="title",
                 type=str,
                 description=(
-                        "Filter by title (ex. ?title=Terminator)"
+                    "Filter by title (ex. ?title=Terminator)"
                 )
             ),
             OpenApiParameter(
                 name="category",
                 type=str,
                 description=(
-                        "Filter by category name (ex. ?category=Films)"
+                    "Filter by category name (ex. ?category=Films)"
                 )
             ),
         ]
