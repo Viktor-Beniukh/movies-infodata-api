@@ -172,10 +172,10 @@ class MovieFramesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MovieFrames
-        fields = ("id", "title", "movies")
+        fields = ("id", "title", "movies", "image")
 
 
-class MovieFramesImageSerializer(serializers.ModelSerializer):
+class MovieFramesListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MovieFrames
@@ -227,6 +227,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
         max_digits=3, decimal_places=1, read_only=True, coerce_to_string=False
     )
     reviews = ReviewSerializer(many=True)
+    film_shots = MovieFramesListSerializer(many=True)
     budget = serializers.SerializerMethodField()
     fees_in_the_usa = serializers.SerializerMethodField()
     fees_in_the_world = serializers.SerializerMethodField()
@@ -238,6 +239,7 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             "title",
             "tagline",
             "poster",
+            "film_shots",
             "year_of_release",
             "country",
             "category",

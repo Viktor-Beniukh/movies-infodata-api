@@ -29,7 +29,6 @@ from movies.serializers import (
     CategoryCreateSerializer,
     GenreCreateSerializer,
     MovieFramesSerializer,
-    MovieFramesImageSerializer,
 )
 from movies.service import MovieFilter
 
@@ -262,25 +261,3 @@ class MovieFramesViewSet(
     queryset = MovieFrames.objects.select_related("movies")
     serializer_class = MovieFramesSerializer
     permission_classes = (IsAdminUser,)
-
-    def get_serializer_class(self):
-        if self.action == "upload_image":
-            return MovieFramesImageSerializer
-        return super().get_serializer_class()
-
-    @action(
-        methods=["POST"],
-        detail=False,
-        url_path="upload-image",
-        permission_classes=[IsAdminUser],
-    )
-    def upload_image(self, request, pk=None):
-        """Endpoint for uploading images to movie frames"""
-        movie_frame = self.get_object()
-        serializer = self.get_serializer(movie_frame, data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
