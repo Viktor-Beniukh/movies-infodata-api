@@ -22,9 +22,9 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("movies.urls", namespace="movies")),
+    path("user/", include("user.urls", namespace="user")),
     path("ckeditor/", include("ckeditor_uploader.urls")),
-    path("", include("movies.urls")),
-    path("user/", include("user.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/doc/swagger/",
