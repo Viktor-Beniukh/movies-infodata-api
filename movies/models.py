@@ -84,9 +84,15 @@ class Movie(models.Model):
     poster = models.ImageField(upload_to=movie_image_file_path, null=True)
     year_of_release = models.PositiveSmallIntegerField(default=2019)
     country = models.CharField(max_length=255, blank=True)
-    directors = models.ManyToManyField(Director, related_name="film_director", blank=True)
-    actors = models.ManyToManyField(Actor, related_name="film_actor", blank=True)
-    genres = models.ManyToManyField(Genre, related_name="film_genre", blank=True)
+    directors = models.ManyToManyField(
+        Director, related_name="film_director", blank=True
+    )
+    actors = models.ManyToManyField(
+        Actor, related_name="film_actor", blank=True
+    )
+    genres = models.ManyToManyField(
+        Genre, related_name="film_genre", blank=True
+    )
     world_premiere = models.DateField(null=True, blank=True)
     budget = models.PositiveIntegerField(
         default=0, help_text="Enter amount in dollars"
@@ -125,7 +131,9 @@ def movie_frames_image_file_path(instance, filename):
 class MovieFrames(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to=movie_frames_image_file_path, null=True)
+    image = models.ImageField(
+        upload_to=movie_frames_image_file_path, null=True
+    )
     movies = models.ForeignKey(
         Movie, on_delete=models.CASCADE, related_name="film_shots"
     )
