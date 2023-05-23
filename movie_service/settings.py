@@ -49,11 +49,12 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "rest_framework",
     "drf_spectacular",
+    "movies",
+    "user",
     "ckeditor",
     "ckeditor_uploader",
     "django_filters",
-    "movies",
-    "user",
+
 ]
 
 MIDDLEWARE = [
