@@ -17,7 +17,14 @@ class ActorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Actor
-        fields = ("id", "name", "age", "description", "image")
+        fields = ("id", "name", "age", "description")
+
+
+class ActorImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Actor
+        fields = ("id", "image")
 
 
 class ActorListSerializer(serializers.ModelSerializer):
@@ -38,7 +45,14 @@ class DirectorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Director
-        fields = "__all__"
+        exclude = ("image",)
+
+
+class DirectorImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Director
+        fields = ("id", "image")
 
 
 class DirectorListSerializer(serializers.ModelSerializer):
@@ -158,14 +172,28 @@ class MovieFramesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MovieFrames
-        fields = ("title", "image", "movies")
+        fields = ("id", "title", "movies")
+
+
+class MovieFramesImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MovieFrames
+        fields = ("id", "image")
 
 
 class MovieSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = "__all__"
+        exclude = ("poster",)
+
+
+class MoviePosterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Movie
+        fields = ("id", "poster")
 
 
 class MovieListSerializer(serializers.ModelSerializer):

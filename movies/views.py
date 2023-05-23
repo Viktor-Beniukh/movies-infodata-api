@@ -1,9 +1,11 @@
 from django.db.models import Avg
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
 
 from movies.models import Movie, Actor, Director, Category, Genre, MovieFrames
 from movies.pagination import ApiPagination
@@ -13,17 +15,21 @@ from movies.serializers import (
     MovieSerializer,
     MovieListSerializer,
     MovieDetailSerializer,
+    MoviePosterSerializer,
     ReviewCreateSerializer,
     RatingCreateSerializer,
     ActorSerializer,
     ActorListSerializer,
     ActorDetailSerializer,
+    ActorImageSerializer,
     DirectorSerializer,
     DirectorListSerializer,
     DirectorDetailSerializer,
+    DirectorImageSerializer,
     CategoryCreateSerializer,
     GenreCreateSerializer,
     MovieFramesSerializer,
+    MovieFramesImageSerializer,
 )
 from movies.service import MovieFilter
 
@@ -57,7 +63,26 @@ class MovieViewSet(viewsets.ModelViewSet):
             return MovieListSerializer
         if self.action == "retrieve":
             return MovieDetailSerializer
+        if self.action == "upload_poster":
+            return MoviePosterSerializer
         return super().get_serializer_class()
+
+    @action(
+        methods=["POST"],
+        detail=True,
+        url_path="upload-poster",
+        permission_classes=[IsAdminUser],
+    )
+    def upload_poster(self, request, pk=None):
+        """Endpoint for uploading poster to specific movie"""
+        movie = self.get_object()
+        serializer = self.get_serializer(movie, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         parameters=[
@@ -122,7 +147,26 @@ class ActorViewSet(viewsets.ModelViewSet):
             return ActorListSerializer
         if self.action == "retrieve":
             return ActorDetailSerializer
+        if self.action == "upload_image":
+            return ActorImageSerializer
         return super().get_serializer_class()
+
+    @action(
+        methods=["POST"],
+        detail=True,
+        url_path="upload-image",
+        permission_classes=[IsAdminUser],
+    )
+    def upload_image(self, request, pk=None):
+        """Endpoint for uploading image to specific actor"""
+        actor = self.get_object()
+        serializer = self.get_serializer(actor, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         parameters=[
@@ -160,7 +204,26 @@ class DirectorViewSet(viewsets.ModelViewSet):
             return DirectorListSerializer
         if self.action == "retrieve":
             return DirectorDetailSerializer
+        if self.action == "upload_image":
+            return DirectorImageSerializer
         return super().get_serializer_class()
+
+    @action(
+        methods=["POST"],
+        detail=True,
+        url_path="upload-image",
+        permission_classes=[IsAdminUser],
+    )
+    def upload_image(self, request, pk=None):
+        """Endpoint for uploading image to specific director"""
+        director = self.get_object()
+        serializer = self.get_serializer(director, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         parameters=[
@@ -199,3 +262,25 @@ class MovieFramesViewSet(
     queryset = MovieFrames.objects.select_related("movies")
     serializer_class = MovieFramesSerializer
     permission_classes = (IsAdminUser,)
+
+    def get_serializer_class(self):
+        if self.action == "upload_image":
+            return MovieFramesImageSerializer
+        return super().get_serializer_class()
+
+    @action(
+        methods=["POST"],
+        detail=False,
+        url_path="upload-image",
+        permission_classes=[IsAdminUser],
+    )
+    def upload_image(self, request, pk=None):
+        """Endpoint for uploading image to specific movie frame"""
+        movie_frame = self.get_object()
+        serializer = self.get_serializer(movie_frame, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
