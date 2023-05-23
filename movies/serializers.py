@@ -208,7 +208,6 @@ class MovieListSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "tagline",
-            "category",
             "film_rating",
             "average_rating",
         )
