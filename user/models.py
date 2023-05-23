@@ -50,6 +50,9 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
     objects = UserManager()
 
+    def __str__(self):
+        return self.email
+
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
@@ -77,13 +80,18 @@ class Profile(models.Model):
         force_insert=False,
         force_update=False,
         using=None,
-        update_fields=None
+        update_fields=None,
+        *args,
+        **kwargs
     ):
-        super().save()
+        if self.image:
+            super().save(*args, **kwargs)
 
-        img = Image.open(self.image.path)
+            img = Image.open(self.image.path)
 
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.image.path)
+        else:
+            super().save(*args, **kwargs)

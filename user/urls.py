@@ -23,12 +23,12 @@ urlpatterns = [
     path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("me/", ManageUserView.as_view(), name="manage"),
     path(
-        "profile/create/",
+        "me/profile-create/",
         CreateProfileView.as_view(),
         name="profile-create"
     ),
     path(
-        "profile/<int:pk>/update/",
+        "me/<int:pk>/profile-update/",
         UpdateProfileView.as_view(),
         name="profile-update"
     ),
