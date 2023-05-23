@@ -1,6 +1,10 @@
+import os
+import uuid
+
 from PIL import Image
 from django.conf import settings
 from django.db import models
+from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
@@ -51,16 +55,18 @@ class User(AbstractUser):
         return f"{self.first_name} {self.last_name}"
 
 
+def profile_image_file_path(instance, filename):
+    _, extension = os.path.splitext(filename)
+    filename = f"{slugify(instance.user.username)}-{uuid.uuid4()}{extension}"
+
+    return os.path.join("uploads/profiles/", filename)
+
+
 class Profile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
-    image = models.ImageField(
-        upload_to="user_profile/",
-        blank=True,
-        null=True,
-        default="user.png"
-    )
+    image = models.ImageField(upload_to=profile_image_file_path, null=True)
     bio = models.TextField(null=True, blank=True)
 
     def __str__(self):
