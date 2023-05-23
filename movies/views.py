@@ -275,7 +275,7 @@ class MovieFramesViewSet(
         permission_classes=[IsAdminUser],
     )
     def upload_image(self, request, pk=None):
-        """Endpoint for uploading image to specific movie frame"""
+        """Endpoint for uploading images to movie frames"""
         movie_frame = self.get_object()
         serializer = self.get_serializer(movie_frame, data=request.data)
 

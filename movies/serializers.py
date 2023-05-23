@@ -52,7 +52,7 @@ class DirectorImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Director
-        fields = ("id", "image")
+        fields = ("id", "image",)
 
 
 class DirectorListSerializer(serializers.ModelSerializer):
