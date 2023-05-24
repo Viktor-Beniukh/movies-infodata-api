@@ -22,6 +22,15 @@ def sample_movie(**params):
     return Movie.objects.create(**defaults)
 
 
+class UnauthenticatedReviewApiTests(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+
+    def test_auth_required(self):
+        response = self.client.get(REVIEW_URL)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
 class AuthenticatedReviewApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()

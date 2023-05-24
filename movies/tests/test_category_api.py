@@ -11,6 +11,15 @@ from movies.models import Category
 CATEGORY_URL = reverse("movies:categories-list")
 
 
+class UnauthenticatedCategoryApiTests(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+
+    def test_auth_required(self):
+        response = self.client.get(CATEGORY_URL)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
 class AuthenticatedCategoryApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()

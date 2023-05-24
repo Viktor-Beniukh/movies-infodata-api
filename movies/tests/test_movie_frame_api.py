@@ -34,6 +34,15 @@ def sample_movie(**params):
     return Movie.objects.create(**defaults)
 
 
+class UnauthenticatedMovieFrameApiTests(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+
+    def test_auth_required(self):
+        response = self.client.get(MOVIE_FRAME_URL)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
 class AuthenticatedMovieFrameApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()

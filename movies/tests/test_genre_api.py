@@ -11,6 +11,15 @@ from movies.models import Genre
 GENRE_URL = reverse("movies:genres-list")
 
 
+class UnauthenticatedGenreApiTests(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+
+    def test_auth_required(self):
+        response = self.client.get(GENRE_URL)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
 class AuthenticatedGenreApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
