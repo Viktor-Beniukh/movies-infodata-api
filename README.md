@@ -111,6 +111,8 @@ Docker should be installed
 
 ## Check project functionality
 
+- Note: after running project you need to set values to RatingStar model through admin panel(e.g. 1, 2, 3, 4, 5)
+
 Superuser credentials for test the functionality of this project:
 - email address: `migrated@admin.com`;
 - password: `migratedpassword`.
